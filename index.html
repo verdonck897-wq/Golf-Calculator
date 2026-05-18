@@ -55,7 +55,7 @@
             background: linear-gradient(90deg, var(--green-mid), var(--accent), var(--green-bright));
         }
 
-        .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: end; }
+        .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; align-items: end; }
         .field-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); }
         select, input {
@@ -90,9 +90,6 @@
         .slagen-input:focus { border-color: var(--green-bright); background: #fff; }
         .filled { background: #f0faf0; border-color: var(--green-bright); }
 
-        .subtotal-row { background: #f2f2f2; font-weight: 600; }
-        .total-row { background: var(--green-dark); color: var(--cream); font-weight: 700; border-top: 3px solid var(--accent); }
-
         .summary-card { background: var(--cream); border-radius: 20px; padding: 30px; box-shadow: var(--shadow-lg); }
         .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; margin-top: 20px; }
         .summary-item { background: white; border-radius: 15px; padding: 20px; text-align: center; border: 1px solid #eee; transition: 0.2s; }
@@ -107,9 +104,6 @@
         .pts-2 { color: var(--text-dark); }
         .pts-3 { color: var(--green-bright); }
         .pts-4 { color: var(--accent); }
-
-        .btn-reset { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
-        .btn-reset:hover { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -132,10 +126,10 @@
                     <option value="Nuclea">Nuclea</option>
                     <option value="Steenhoven">Steenhoven</option>
                     <option value="Kempense">Kempense</option>
-                </select>
+                    </select>
             </div>
             <div class="field-group">
-                <label>Baan</label>
+                <label>Spelmodus</label>
                 <select id="mode" onchange="populateTees(); renderTable();"></select>
             </div>
             <div class="field-group">
@@ -175,7 +169,118 @@
 </div>
 
 <script>
-const courseData = {"Nuclea": {"full 18": {"name": "Nuclea Mol (18 Holes)", "par": [3, 4, 4, 3, 5, 4, 3, 4, 3, 3, 4, 4, 3, 5, 4, 3, 4, 3], "si": [15, 11, 3, 17, 5, 9, 1, 7, 13, 16, 12, 4, 18, 6, 10, 2, 8, 14], "tees": {"oranje": {"cr": 59.0, "sr": 90, "par_total": 66, "color": "#f5a623"}, "rood": {"cr": 61.0, "sr": 99, "par_total": 66, "color": "#c0392b"}, "geel": {"cr": 61.7, "sr": 112, "par_total": 66, "color": "#f1c40f"}}}, "front 9": {"name": "Nuclea Mol (Front 9)", "par": [3, 4, 4, 3, 5, 4, 3, 4, 3], "si": [15, 11, 3, 17, 5, 9, 1, 7, 13], "tees": {"oranje": {"cr": 29.5, "sr": 90, "par_total": 33, "color": "#f5a623"}, "rood": {"cr": 30.5, "sr": 99, "par_total": 33, "color": "#c0392b"}, "geel": {"cr": 30.8, "sr": 112, "par_total": 33, "color": "#f1c40f"}}}, "back 9": {"name": "Nuclea Mol (Back 9)", "par": [3, 4, 4, 3, 5, 4, 3, 4, 3], "si": [16, 12, 4, 18, 6, 10, 2, 8, 14], "tees": {"oranje": {"cr": 29.5, "sr": 90, "par_total": 33, "color": "#f5a623"}, "rood": {"cr": 30.5, "sr": 99, "par_total": 33, "color": "#c0392b"}, "geel": {"cr": 30.9, "sr": 112, "par_total": 33, "color": "#f1c40f"}}}}, "Steenhoven": {"full 18": {"name": "Steenhoven (18 Holes)", "par": [5, 4, 5, 4, 4, 4, 3, 4, 4, 3, 5, 4, 5, 4, 4, 3, 4, 3], "si": [11, 5, 1, 17, 7, 3, 15, 9, 13, 10, 2, 18, 4, 8, 16, 6, 12, 14], "tees": {"rood": {"cr": 66.3, "sr": 118, "par_total": 72, "color": "#c0392b"}, "blauw": {"cr": 67.9, "sr": 121, "par_total": 72, "color": "#2980b9"}, "geel": {"cr": 70.1, "sr": 126, "par_total": 72, "color": "#f1c40f"}, "wit": {"cr": 71.3, "sr": 129, "par_total": 72, "color": "#ecf0f1"}}}, "front 9": {"name": "Steenhoven (Front 9)", "par": [5, 4, 5, 4, 4, 4, 3, 4, 4], "si": [11, 5, 1, 17, 7, 3, 15, 9, 13], "tees": {"rood": {"cr": 33.1, "sr": 118, "par_total": 36, "color": "#c0392b"}, "blauw": {"cr": 33.9, "sr": 121, "par_total": 36, "color": "#2980b9"}, "geel": {"cr": 35.0, "sr": 126, "par_total": 36, "color": "#f1c40f"}, "wit": {"cr": 35.6, "sr": 129, "par_total": 36, "color": "#ecf0f1"}}}, "back 9": {"name": "Steenhoven (Back 9)", "par": [3, 5, 4, 5, 4, 4, 3, 4, 3], "si": [10, 2, 18, 4, 8, 16, 6, 12, 14], "tees": {"rood": {"cr": 33.2, "sr": 118, "par_total": 36, "color": "#c0392b"}, "blauw": {"cr": 34.0, "sr": 121, "par_total": 36, "color": "#2980b9"}, "geel": {"cr": 35.1, "sr": 126, "par_total": 36, "color": "#f1c40f"}, "wit": {"cr": 35.7, "sr": 129, "par_total": 36, "color": "#ecf0f1"}}}}, "Kempense": {"full 18": {"name": "Kempense (18 Holes)", "par": [5, 3, 4, 4, 4, 3, 4, 3, 5, 4, 4, 5, 4, 3, 4, 5, 3, 5], "si": [4, 16, 2, 14, 18, 12, 6, 10, 8, 7, 11, 5, 1, 15, 13, 9, 17, 3], "tees": {"oranje": {"cr": 62.9, "sr": 104, "par_total": 72, "color": "#f5a623"}, "rood": {"cr": 65.9, "sr": 110, "par_total": 72, "color": "#c0392b"}, "blauw": {"cr": 67.5, "sr": 115, "par_total": 72, "color": "#2980b9"}, "geel": {"cr": 69.6, "sr": 118, "par_total": 72, "color": "#f1c40f"}, "wit": {"cr": 71.0, "sr": 127, "par_total": 72, "color": "#ecf0f1"}, "zwart": {"cr": 71.2, "sr": 127, "par_total": 72, "color": "#2c3e50"}}}, "front 9": {"name": "Kempense (Front 9)", "par": [5, 3, 4, 4, 4, 3, 4, 3, 5], "si": [4, 16, 2, 14, 18, 12, 6, 10, 8], "tees": {"oranje": {"cr": 31.4, "sr": 104, "par_total": 35, "color": "#f5a623"}, "rood": {"cr": 32.9, "sr": 110, "par_total": 35, "color": "#c0392b"}, "blauw": {"cr": 33.7, "sr": 115, "par_total": 35, "color": "#2980b9"}, "geel": {"cr": 34.8, "sr": 118, "par_total": 35, "color": "#f1c40f"}, "wit": {"cr": 35.5, "sr": 127, "par_total": 35, "color": "#ecf0f1"}, "zwart": {"cr": 35.6, "sr": 127, "par_total": 35, "color": "#2c3e50"}}}, "back 9": {"name": "Kempense (Back 9)", "par": [4, 4, 5, 4, 3, 4, 5, 3, 5], "si": [7, 11, 5, 1, 15, 13, 9, 17, 3], "tees": {"oranje": {"cr": 31.5, "sr": 104, "par_total": 37, "color": "#f5a623"}, "rood": {"cr": 33.0, "sr": 110, "par_total": 37, "color": "#c0392b"}, "blauw": {"cr": 33.8, "sr": 115, "par_total": 37, "color": "#2980b9"}, "geel": {"cr": 34.8, "sr": 118, "par_total": 37, "color": "#f1c40f"}, "wit": {"cr": 35.5, "sr": 127, "par_total": 37, "color": "#ecf0f1"}, "zwart": {"cr": 35.6, "sr": 127, "par_total": 37, "color": "#2c3e50"}}}}, "Witloop": {"full": {"name": "Witloop (Ekeren)", "par": [4, 3, 4, 3, 4, 5, 4, 3, 3], "si": [5, 9, 3, 7, 1, 2, 4, 8, 6], "tees": {"rood": {"cr": 32.4, "sr": 111, "par_total": 33, "color": "#c0392b"}, "geel": {"cr": 31.5, "sr": 112, "par_total": 33, "color": "#f1c40f"}}}}, "Lilse Golfclub": {"full": {"name": "Lilse Golfclub", "par": [3, 3, 3, 3, 3, 3, 3, 3, 3], "si": [5, 9, 1, 7, 3, 2, 4, 8, 6], "tees": {"rood": {"cr": 27.0, "sr": 113, "par_total": 27, "color": "#c0392b"}, "geel": {"cr": 27.0, "sr": 113, "par_total": 27, "color": "#f1c40f"}}}}};
+// Volledig exacte database overgenomen uit je spreadsheets
+const courseData = {
+    "Nuclea": {
+        "full 18": {
+            "name": "Nuclea Mol (18 Holes)",
+            "par": [3, 4, 4, 3, 5, 4, 3, 4, 3, 3, 4, 4, 3, 5, 4, 3, 4, 3],
+            "si": [15, 11, 3, 17, 5, 9, 1, 7, 13, 16, 12, 4, 18, 6, 10, 2, 8, 14],
+            "tees": {
+                "oranje": {"cr": 59.0, "sr": 90, "par_total": 66, "color": "#f5a623"},
+                "rood": {"cr": 61.0, "sr": 99, "par_total": 66, "color": "#c0392b"},
+                "geel": {"cr": 61.7, "sr": 112, "par_total": 66, "color": "#f1c40f"}
+            }
+        },
+        "front 9": {
+            "name": "Nuclea Mol (Front 9)",
+            "par": [3, 4, 4, 3, 5, 4, 3, 4, 3],
+            "si": [8, 6, 2, 9, 3, 5, 1, 4, 7],
+            "tees": {
+                "oranje": {"cr": 29.5, "sr": 90, "par_total": 33, "color": "#f5a623"},
+                "rood": {"cr": 30.5, "sr": 99, "par_total": 33, "color": "#c0392b"},
+                "geel": {"cr": 30.8, "sr": 112, "par_total": 33, "color": "#f1c40f"}
+            }
+        },
+        "back 9": {
+            "name": "Nuclea Mol (Back 9)",
+            "par": [3, 4, 4, 3, 5, 4, 3, 4, 3],
+            "si": [8, 6, 2, 9, 3, 5, 1, 4, 7],
+            "tees": {
+                "oranje": {"cr": 29.5, "sr": 90, "par_total": 33, "color": "#f5a623"},
+                "rood": {"cr": 30.5, "sr": 99, "par_total": 33, "color": "#c0392b"},
+                "geel": {"cr": 30.9, "sr": 112, "par_total": 33, "color": "#f1c40f"}
+            }
+        }
+    },
+    "Steenhoven": {
+        "full 18": {
+            "name": "Steenhoven (18 Holes)",
+            "par": [5, 4, 5, 4, 4, 4, 3, 4, 4, 3, 5, 4, 5, 4, 4, 3, 4, 3],
+            "si": [11, 5, 1, 17, 7, 3, 15, 9, 13, 10, 2, 18, 4, 8, 16, 6, 12, 14],
+            "tees": {
+                "rood": {"cr": 66.3, "sr": 118, "par_total": 72, "color": "#c0392b"},
+                "blauw": {"cr": 67.9, "sr": 121, "par_total": 72, "color": "#2980b9"},
+                "geel": {"cr": 70.1, "sr": 126, "par_total": 72, "color": "#f1c40f"},
+                "wit": {"cr": 71.3, "sr": 129, "par_total": 72, "color": "#ecf0f1"}
+            }
+        },
+        "front 9": {
+            "name": "Steenhoven (Front 9)",
+            "par": [5, 4, 5, 4, 4, 4, 3, 4, 4],
+            "si": [3, 9, 1, 6, 7, 4, 8, 5, 2],
+            "tees": {
+                "rood": {"cr": 34.3, "sr": 118, "par_total": 37, "color": "#c0392b"},
+                "blauw": {"cr": 35.2, "sr": 122, "par_total": 37, "color": "#2980b9"},
+                "geel": {"cr": 36.5, "sr": 127, "par_total": 37, "color": "#f1c40f"},
+                "wit": {"cr": 37.4, "sr": 131, "par_total": 37, "color": "#ecf0f1"}
+            }
+        },
+        "back 9": {
+            "name": "Steenhoven (Back 9)",
+            "par": [3, 5, 4, 5, 4, 4, 3, 4, 3],
+            "si": [9, 1, 5, 7, 6, 3, 4, 2, 8],
+            "tees": {
+                "rood": {"cr": 32.1, "sr": 118, "par_total": 35, "color": "#c0392b"},
+                "blauw": {"cr": 32.7, "sr": 120, "par_total": 35, "color": "#2980b9"},
+                "geel": {"cr": 33.5, "sr": 124, "par_total": 35, "color": "#f1c40f"},
+                "wit": {"cr": 34.4, "sr": 128, "par_total": 35, "color": "#ecf0f1"}
+            }
+        }
+    },
+    "Kempense": {
+        "full 18": {
+            "name": "Kempense (18 Holes)",
+            "par": [5, 3, 4, 4, 4, 3, 4, 3, 5, 4, 4, 5, 4, 3, 4, 5, 3, 5],
+            "si": [4, 16, 2, 14, 18, 12, 6, 10, 8, 7, 11, 5, 1, 15, 13, 9, 17, 3],
+            "tees": {
+                "oranje": {"cr": 62.9, "sr": 104, "par_total": 72, "color": "#f5a623"},
+                "rood": {"cr": 65.9, "sr": 110, "par_total": 72, "color": "#c0392b"},
+                "blauw": {"cr": 67.5, "sr": 115, "par_total": 72, "color": "#2980b9"},
+                "geel": {"cr": 69.6, "sr": 118, "par_total": 72, "color": "#f1c40f"},
+                "wit": {"cr": 71.0, "sr": 127, "par_total": 72, "color": "#ecf0f1"},
+                "zwart": {"cr": 71.2, "sr": 127, "par_total": 72, "color": "#2c3e50"}
+            }
+        },
+        "front 9": {
+            "name": "Kempense (Front 9)",
+            "par": [5, 3, 4, 4, 4, 3, 4, 3, 5],
+            "si": [2, 8, 1, 7, 9, 6, 3, 5, 4],
+            "tees": {
+                "oranje": {"cr": 30.1, "sr": 93, "par_total": 35, "color": "#f5a623"},
+                "rood": {"cr": 31.4, "sr": 99, "par_total": 35, "color": "#c0392b"},
+                "blauw": {"cr": 32.2, "sr": 104, "par_total": 35, "color": "#2980b9"},
+                "geel": {"cr": 33.1, "sr": 114, "par_total": 35, "color": "#f1c40f"},
+                "zwart": {"cr": 34.0, "sr": 127, "par_total": 35, "color": "#2c3e50"},
+                "wit": {"cr": 33.8, "sr": 126, "par_total": 35, "color": "#ecf0f1"}
+            }
+        },
+        "back 9": {
+            "name": "Kempense (Back 9)",
+            "par": [4, 4, 5, 4, 3, 4, 5, 3, 5],
+            "si": [4, 6, 3, 1, 8, 7, 5, 9, 2],
+            "tees": {
+                "oranje": {"cr": 32.8, "sr": 114, "par_total": 37, "color": "#f5a623"},
+                "rood": {"cr": 34.5, "sr": 121, "par_total": 37, "color": "#c0392b"},
+                "blauw": {"cr": 35.3, "sr": 125, "par_total": 37, "color": "#2980b9"},
+                "geel": {"cr": 36.5, "sr": 122, "par_total": 37, "color": "#f1c40f"},
+                "zwart": {"cr": 37.2, "sr": 127, "par_total": 37, "color": "#2c3e50"},
+                "wit": {"cr": 37.2, "sr": 127, "par_total": 37, "color": "#ecf0f1"}
+            }
+        }
+    },
+    
+};
 
 function populateModes() {
     const clubName = document.getElementById('club').value;
@@ -241,7 +346,7 @@ function renderTable() {
     for (let i = 0; i < numHoles; i++) {
         const si = gameData.si[i];
         let extra = baseExtra + (phcp >= 0 ? (si <= remainder ? 1 : 0) : (si > (numHoles + phcp) ? -1 : 0));
-        const holeNum = (mode === "back 9") ? (i + 10) : (i + 1);
+        const holeNum = (mode === "back" && clubName !== "Witloop" && clubName !== "Lilse Golfclub") ? (i + 10) : (i + 1);
 
         html += `<tr>
             <td class="hole-num">${holeNum}</td>
@@ -284,10 +389,10 @@ function updateTotals() {
             cell.className = "pts-cell pts-" + (pts > 4 ? "4" : pts);
             
             totalP += pts;
-            if(mode === "full 18") {
+            if(mode === "full") {
                 if(i < 9) outP += pts; else inP += pts;
             } else {
-                if(mode === "front 9") outP += pts; else inP += pts;
+                if(mode === "front") outP += pts; else inP += pts;
             }
         } else {
             input.classList.remove('filled');
@@ -305,4 +410,4 @@ function updateTotals() {
 populateModes();
 </script>
 </body>
-</html>
+</html>"""
